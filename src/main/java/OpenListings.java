@@ -27,7 +27,7 @@ public class OpenListings {
         System.out.println(getDimensionsOfArray(json2)); // This should = 1
         System.out.println(getDimensionsOfArray(json3)); // This should = 2
         System.out.println(getDimensionsOfArray(json4)); // This should = 0
-        System.out.println(getDimensionsOfArray(json5)); // This should = 0
+        System.out.println(getDimensionsOfArray(json5)); // This should = -1
         System.out.println();
 
         // Problem #2:
@@ -41,6 +41,8 @@ public class OpenListings {
         // Problem #3:
         /*
             If I were to implement a more feature rich version of this wrapper,
+            I would add functionality to track the duration it would take, also include considerations of traffic,
+            and also providing alternate routes for users if a faster one is possible.
          */
         System.out.println("Problem 3: ");
         String origin = "2301 Hyperion Ave., Los Angeles, CA 90027";
@@ -51,14 +53,15 @@ public class OpenListings {
     }
 
     //Can we assume all items in arrays are numbers?
-    private static int getDimensionsOfArray(String json) {
+    static int getDimensionsOfArray(String json) {
         if (json.length() == 0) {
             return 0;
         }
 
-        if (!(json instanceof String)) {
-            return -1;
-        }
+        // If the method can take in more than just a String, then this should be included
+//        if (!(json instanceof String)) {
+//            return -1;
+//        }
 
         Stack<Character> stack = new Stack<>();
         int depth = 0;
@@ -76,15 +79,13 @@ public class OpenListings {
         return stack.size() == 0 ? max : -1;
     }
 
-    public static List<String> getListOfShittyListings(String path) {
+    static List<String> getListOfShittyListings(String path) {
         List<String> shittyListings = new ArrayList<>();
         String shittyListingString = "shittylistings.com";
         try (Stream<Path> paths = Files.walk(Paths.get(path))
                                         .filter(s -> s.toString().endsWith(".html"))) {
             paths.forEach(filePath ->
-            {
-                checkHTMLForShittyListings(filePath.toFile(), shittyListings, shittyListingString);
-            });
+                    checkHTMLForShittyListings(filePath.toFile(), shittyListings, shittyListingString));
         } catch (IOException e) {
             e.printStackTrace();
         }
